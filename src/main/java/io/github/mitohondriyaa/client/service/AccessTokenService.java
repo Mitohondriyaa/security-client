@@ -16,6 +16,7 @@ public class AccessTokenService {
     public AccessToken getAccessToken() {
         OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
             .withClientRegistrationId("security-client")
+            .principal("security-client")
             .build();
         OAuth2AuthorizedClient authorizedClient = authorizedClientManager
             .authorize(authorizeRequest);
