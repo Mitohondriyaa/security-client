@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/access-token")
+@RequestMapping("/api/token")
 @RequiredArgsConstructor
 public class AccessTokenController {
     private final AccessTokenService accessTokenService;
