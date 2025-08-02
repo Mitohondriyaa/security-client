@@ -1,5 +1,6 @@
 package io.github.mitohondriyaa.client.service;
 
+import io.github.mitohondriyaa.client.exception.TokenNotAvailableException;
 import io.github.mitohondriyaa.client.model.AccessToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
@@ -20,7 +21,7 @@ public class AccessTokenService {
             .authorize(authorizeRequest);
 
         if (authorizedClient == null) {
-            throw new RuntimeException();
+            throw new TokenNotAvailableException("No token available");
         }
 
         return new AccessToken(
