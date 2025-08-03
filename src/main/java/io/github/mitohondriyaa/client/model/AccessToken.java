@@ -1,14 +1,5 @@
 package io.github.mitohondriyaa.client.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class AccessToken {
-    private String accessToken;
-}
+public record AccessToken(@JsonProperty("access_token") String accessToken) {}
