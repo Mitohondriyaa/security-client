@@ -30,6 +30,6 @@ class SecurityClientApplicationTests {
 
 		mockMvc.perform(get("/api/access-token"))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("accessToken").value("mock-token"));
+			.andExpect(jsonPath("access_token").value("mock-token"));
 	}
 }
