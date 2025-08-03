@@ -1,6 +1,7 @@
 package io.github.mitohondriyaa.client.service;
 
 import io.github.mitohondriyaa.client.client.KeycloakClient;
+import io.github.mitohondriyaa.client.exception.TokenNotAvailableException;
 import io.github.mitohondriyaa.client.model.AccessToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,18 +11,20 @@ import org.springframework.util.MultiValueMap;
 @Service
 public class AccessTokenService {
     private final KeycloakClient  keycloakClient;
-    @Value("${client-id}")
-    private String clientId;
-    @Value("${client-secret}")
-    private String clientSecret;
-    @Value("${username}")
-    private String username;
-    @Value("${password}")
-    private String password;
     private final MultiValueMap<String, String> requestBody
         = new LinkedMultiValueMap<>();
 
-    public AccessTokenService(KeycloakClient keycloakClient) {
+    public AccessTokenService(
+        KeycloakClient keycloakClient,
+        @Value("${client-id}")
+        String clientId,
+        @Value("${client-secret}")
+        String clientSecret,
+        @Value("${username}")
+        String username,
+        @Value("${password}")
+        String password
+    ) {
         this.keycloakClient = keycloakClient;
         requestBody.add("grant_type", "password");
         requestBody.add("client_id", clientId);
@@ -31,6 +34,12 @@ public class AccessTokenService {
     }
 
     public AccessToken getAccessToken() {
-        return keycloakClient.getAccessToken(requestBody);
+        AccessToken accessToken = keycloakClient.getAccessToken(requestBody);
+
+        if (accessToken == null) {
+            throw new TokenNotAvailableException("Token not available");
+        }
+
+        return accessToken;
     }
 }
