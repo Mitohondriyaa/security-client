@@ -1,34 +1,36 @@
 package io.github.mitohondriyaa.client.service;
 
-import io.github.mitohondriyaa.client.exception.TokenNotAvailableException;
+import io.github.mitohondriyaa.client.client.KeycloakClient;
 import io.github.mitohondriyaa.client.model.AccessToken;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Service
-@RequiredArgsConstructor
 public class AccessTokenService {
-    private final OAuth2AuthorizedClientManager authorizedClientManager;
+    private final KeycloakClient  keycloakClient;
+    @Value("${client-id}")
+    private String clientId;
+    @Value("${client-secret}")
+    private String clientSecret;
+    @Value("${username}")
+    private String username;
+    @Value("${password}")
+    private String password;
+    private final MultiValueMap<String, String> requestBody
+        = new LinkedMultiValueMap<>();
+
+    public AccessTokenService(KeycloakClient keycloakClient) {
+        this.keycloakClient = keycloakClient;
+        requestBody.add("grant_type", "password");
+        requestBody.add("client_id", clientId);
+        requestBody.add("client_secret", clientSecret);
+        requestBody.add("username", username);
+        requestBody.add("password", password);
+    }
 
     public AccessToken getAccessToken() {
-        OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
-            .withClientRegistrationId("security-client")
-            .principal(new UsernamePasswordAuthenticationToken("test-user", "12345"))
-            .build();
-        OAuth2AuthorizedClient authorizedClient = authorizedClientManager
-            .authorize(authorizeRequest);
-
-        if (authorizedClient == null) {
-            throw new TokenNotAvailableException("No token available");
-        }
-
-        return new AccessToken(
-            authorizedClient.getAccessToken().getTokenValue()
-        );
+        return keycloakClient.getAccessToken(requestBody);
     }
 }
