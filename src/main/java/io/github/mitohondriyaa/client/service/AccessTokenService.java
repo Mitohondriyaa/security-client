@@ -14,15 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccessTokenService {
     private final OAuth2AuthorizedClientManager authorizedClientManager;
-    @Value("${username}")
-    private String username;
-    @Value("${password}")
-    private String password;
 
     public AccessToken getAccessToken() {
         OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
             .withClientRegistrationId("security-client")
-            .principal(new UsernamePasswordAuthenticationToken(username, password))
+            .principal(new UsernamePasswordAuthenticationToken("test-user", "12345"))
             .build();
         OAuth2AuthorizedClient authorizedClient = authorizedClientManager
             .authorize(authorizeRequest);
