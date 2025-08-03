@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.PostExchange;
 
 public interface KeycloakClient {
-    @PostExchange(
-        value = "http://localhost:8088/realms/microservices-realm" +
-            "/protocol/openid-connect/token",
-        contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    )
+    @PostExchange(contentType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     AccessToken getAccessToken(@RequestBody MultiValueMap<String, String> body);
 }
